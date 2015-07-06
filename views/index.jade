@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  header
+    h1= title
+    h3= subtitle
+  div
+    - for (var count = 0; count < totalSubjects; count++)
+      div
+        a(href='/subjects/'+allSubjects[count])
+          =allSubjects[count]
+
