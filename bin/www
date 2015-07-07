@@ -7,6 +7,12 @@
 var app = require('../app');
 var debug = require('debug')('zblog:server');
 var http = require('http');
+var db_init = require('../database/db_init');
+
+/**
+ * Test connect to database
+ */
+db_init.tryDB();
 
 /**
  * Get port from environment and store in Express.

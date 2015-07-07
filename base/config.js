@@ -2,6 +2,9 @@
  * Created by saye on 2015/7/6.
  */
 
-var blogName = "saye's blog";
+var fs = require('fs');
 
-exports.blogName = blogName;
+var configStr = fs.readFileSync(__dirname + "/config.json");
+var config = JSON.parse(configStr);
+
+module.exports = config;
