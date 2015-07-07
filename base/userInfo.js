@@ -2,24 +2,39 @@
  * Created by lichong on 15/7/7.
  */
 var userInfo = function () {
-    var user = {},
+    var userinfo = {},
         m_email, m_username,
         m_id, m_password;
 
-    user.setUsername = function (name) {
+    userinfo.setUsername = function (name) {
         m_username = name;
     };
-    user.getUsername = function () {
+    userinfo.getUsername = function () {
         return m_username;
     };
-    user.setPassword = function (password) {
+    userinfo.setPassword = function (password) {
         m_password = password;
     };
-    user.getPassword = function () {
+    userinfo.getPassword = function () {
         return m_password;
     };
 
-    return user;
+    userinfo.getJsonObj = function () {
+        var obj = {};
+        obj.username = m_username;
+        obj.email = m_email;
+        obj.id = m_id;
+        obj.password = m_password;
+        return obj;
+    };
+
+    userinfo.fromJsonObj = function (obj) {
+        m_username = obj.username;
+        m_email = obj.email;
+        m_id = obj.id;
+        m_password = obj.password;
+    };
+    return userinfo;
 };
 
 module.exports = userInfo;
