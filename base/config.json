@@ -1,4 +1,5 @@
 {
   "db_url": "mongodb://localhost:27017/zblog",
-  "blogName": "saye's blog"
+  "blogName": "saye's blog",
+  "secret": "saye's luotianyi color"
 }

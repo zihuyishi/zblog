@@ -4,9 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('client-sessions');
 
+var config = require('./base/config');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var dashboard = require('./routes/dashboard');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -20,11 +24,29 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+    cookieName: 'session',
+    secret: config.secret || 'some_random_key',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 50 * 1000,
+}));
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * config user from session
+ */
+app.use(function(req, res, next) {
+    if (req.session && req.session.user) {
+
+    }
+    next();
+});
+
 // route
 app.use('/', routes);
+app.use('/dashboard', dashboard);
+app.use('/login', login);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
