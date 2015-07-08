@@ -2,39 +2,42 @@
  * Created by lichong on 15/7/7.
  */
 var userInfo = function () {
-    var userinfo = {},
-        m_email, m_username,
-        m_id, m_password;
+    this.username = "";
+    this.password = "";
+    this.id = -1;
+    this.email = "";
+    this.level = -1;
+};
 
-    userinfo.setUsername = function (name) {
-        m_username = name;
-    };
-    userinfo.getUsername = function () {
-        return m_username;
-    };
-    userinfo.setPassword = function (password) {
-        m_password = password;
-    };
-    userinfo.getPassword = function () {
-        return m_password;
-    };
+userInfo.prototype.setUsername = function (name) {
+    this.username = name;
+};
+userInfo.prototype.getUsername = function () {
+    return this.username;
+};
+userInfo.prototype.setPassword = function (password) {
+    this.password = password;
+};
+userInfo.prototype.getPassword = function () {
+    return this.password;
+};
 
-    userinfo.getJsonObj = function () {
-        var obj = {};
-        obj.username = m_username;
-        obj.email = m_email;
-        obj.id = m_id;
-        obj.password = m_password;
-        return obj;
-    };
+userInfo.prototype.getJsonObj = function () {
+    var obj = {};
+    obj.username = this.username;
+    obj.email = this.email;
+    obj.id = this.id;
+    obj.password = this.password;
+    obj.leve = this.level;
+    return obj;
+};
 
-    userinfo.fromJsonObj = function (obj) {
-        m_username = obj.username;
-        m_email = obj.email;
-        m_id = obj.id;
-        m_password = obj.password;
-    };
-    return userinfo;
+userInfo.prototype.fromJsonObj = function (obj) {
+    this.username = obj.username;
+    this.email = obj.email;
+    this.id = obj.id;
+    this.password = obj.password;
+    this.level = obj.level;
 };
 
 module.exports = userInfo;

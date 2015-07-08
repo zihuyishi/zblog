@@ -5,106 +5,120 @@ var mongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var config = require('../base/config');
 var assert = require('assert');
+var userInfo = require('../base/userInfo');
 
-var url = config.url;
+var url = config.db_url;
 
 var DBClient = function () {
-    var client = {},
-        database = null;
+    this.database = null;
+};
 
-    client.connect = function (callback) {
-        mongoClient.connect(url, function (err, db) {
-            if (err == null) {
-                database = db;
-            }
-            if (callback) {
-                callback(err);
-            }
-        });
-    };
-
-    client.close = function () {
-        assert(database != null);
-        database.close();
-        database = null;
-    };
-
-    client.getMongoDB = function () {
-        return database;
-    };
-
-    client.insert = function (table, data, callback) {
-        assert(database != null);
-        database.collection(table).insertOne(data, function (err, result) {
-            if (callback instanceof Function) {
-                callback(err, result);
-            }
-        });
-    };
-
-    client.insertArray = function (table, array, callback) {
-        assert(database != null);
-        assert(Array.isArray(array));
-        database.collection(table).insertMany(array, function (err, result) {
-            if (callback instanceof Function) {
-                callback(err, result);
-            }
-        });
-    };
-
-    client.query = function (table, condition, callback) {
-        assert(database != null);
-        var cursor = database.collection(table).find(condition);
-        if (callback instanceof Function) {
-            callback(cursor);
+DBClient.prototype.connect = function (callback) {
+    var self = this;
+    mongoClient.connect(url, function (err, db) {
+        if (err == null) {
+            self.database = db;
         }
-    };
-
-    client.queryAll = function (table, callback) {
-        assert(database != null);
-        var cursor = database.collection(table).find();
-        if (callback instanceof Function) {
-            callback(cursor);
+        if (callback) {
+            callback(err);
         }
-    };
+    });
+};
 
-    client.updateOne = function (table, condition, operate, callback) {
-        assert(database != null);
-        database.collection(table).updateOne(condition, operate, function (err, results) {
-            if (callback instanceof Function) {
-                callback(err, results);
-            }
-        });
-    };
+DBClient.prototype.close = function () {
+    assert(this.database != null);
+    this.database.close();
+    this.database = null;
+};
 
-    client.update = function (table, condition, operate, callback) {
-        assert(database != null);
-        database.collection(table).updateMany(condition, operate, function (err, results) {
-            if (callback instanceof Function) {
-                callback(err, results);
-            }
-        });
-    };
+DBClient.prototype.getMongoDB = function () {
+    return this.database;
+};
 
-    client.replaceOne = function (table, condition, data, callback) {
-        assert(database != null);
-        database.collection(table).replaceOne(condition, data, function (err, results) {
-            if (callback instanceof Function) {
-                callback(err, results);
-            }
-        });
-    };
+DBClient.prototype.insert = function (table, data, callback) {
+    assert(this.database != null);
+    this.database.collection(table).insertOne(data, function (err, result) {
+        if (callback instanceof Function) {
+            callback(err, result);
+        }
+    });
+};
 
-    client.delete = function (table, condition, callback) {
-        assert(database != null);
-        database.collection(table).deleteMany(condition, function (err, results) {
-            if (callback instanceof Function) {
-                callback(err, results);
-            }
-        });
-    };
+DBClient.prototype.insertArray = function (table, array, callback) {
+    assert(this.database != null);
+    assert(Array.isArray(array));
+    this.database.collection(table).insertMany(array, function (err, result) {
+        if (callback instanceof Function) {
+            callback(err, result);
+        }
+    });
+};
 
-    return client;
+DBClient.prototype.query = function (table, condition, callback) {
+    assert(this.database != null);
+    var cursor = this.database.collection(table).find(condition);
+    if (callback instanceof Function) {
+        callback(cursor);
+    }
+};
+
+DBClient.prototype.queryAll = function (table, callback) {
+    assert(this.database != null);
+    var cursor = this.database.collection(table).find();
+    if (callback instanceof Function) {
+        callback(cursor);
+    }
+};
+
+DBClient.prototype.updateOne = function (table, condition, operate, callback) {
+    assert(this.database != null);
+    this.database.collection(table).updateOne(condition, operate, function (err, results) {
+        if (callback instanceof Function) {
+            callback(err, results);
+        }
+    });
+};
+
+DBClient.prototype.update = function (table, condition, operate, callback) {
+    assert(this.database != null);
+    this.database.collection(table).updateMany(condition, operate, function (err, results) {
+        if (callback instanceof Function) {
+            callback(err, results);
+        }
+    });
+};
+
+DBClient.prototype.replaceOne = function (table, condition, data, callback) {
+    assert(this.database != null);
+    this.database.collection(table).replaceOne(condition, data, function (err, results) {
+        if (callback instanceof Function) {
+            callback(err, results);
+        }
+    });
+};
+
+DBClient.prototype.delete = function (table, condition, callback) {
+    assert(this.database != null);
+    this.database.collection(table).deleteMany(condition, function (err, results) {
+        if (callback instanceof Function) {
+            callback(err, results);
+        }
+    });
+};
+
+//
+DBClient.prototype.queryUserExist = function (user, callback) {
+    assert(this.database != null);
+    var cursor = this.database.collection('users')
+        .find( {"username": user.getUsername(), "password": user.getPassword()} );
+    var result = false;
+    cursor.forEach(function (doc) {
+        result = true;
+    }, function (err) {
+        if (callback) {
+            callback(result);
+        }
+    });
 };
 
 module.exports = DBClient;

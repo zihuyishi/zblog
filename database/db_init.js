@@ -11,6 +11,7 @@ var tryConnect = function () {
     mongoClient.connect(url, function (err, db) {
         if (err == null) {
             console.log("connected correctly to database server");
+            db.close();
         } else {
             throw err;
         }
