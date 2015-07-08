@@ -56,7 +56,7 @@ DBClient.prototype.query = function (table, condition, callback) {
     assert(this.database != null);
     var cursor = this.database.collection(table).find(condition);
     if (callback instanceof Function) {
-        callback(cursor);
+        callback(null, cursor);
     }
 };
 
@@ -64,7 +64,7 @@ DBClient.prototype.queryAll = function (table, callback) {
     assert(this.database != null);
     var cursor = this.database.collection(table).find();
     if (callback instanceof Function) {
-        callback(cursor);
+        callback(null, cursor);
     }
 };
 

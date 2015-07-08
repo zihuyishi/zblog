@@ -11,6 +11,7 @@ function _initCounter(db, table, callback) {
     db.collection('counters').insertOne(
         {_id: table, seq: 0},
         function (err, result) {
+            db.close();
             if (err == null) {
                 callback(err, 0);
             } else {
@@ -26,7 +27,8 @@ function _findAndUpdate(db, table, callback) {
         {returnOriginal: false},
         function (err, result) {
             if (err == null) {
-                callback(err, result.req);
+                db.close();
+                callback(err, result.value.seq);
             } else { //counter not init
                 _initCounter(db, table, callback);
             }

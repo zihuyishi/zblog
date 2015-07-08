@@ -21,6 +21,24 @@ userInfo.prototype.setPassword = function (password) {
 userInfo.prototype.getPassword = function () {
     return this.password;
 };
+userInfo.prototype.setEmail = function (email) {
+    this.email = email;
+};
+userInfo.prototype.getEmail = function () {
+    return this.email;
+};
+userInfo.prototype.setUserId = function (userId) {
+    this.id = userId;
+};
+userInfo.prototype.getUserId = function () {
+    return this.id;
+};
+userInfo.prototype.setLevel = function (level) {
+    this.level = level;
+};
+userInfo.prototype.getLevel = function () {
+    return this.level;
+};
 
 userInfo.prototype.getJsonObj = function () {
     var obj = {};

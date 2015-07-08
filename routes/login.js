@@ -9,7 +9,11 @@ var userInfo = require('../base/userInfo');
 var dbClient = require('../database/db_helper');
 
 router.get('/', function (req, res, next) {
-    res.render('login', {});
+    if (req.user != null) {
+        res.redirect('/dashboard');
+    } else {
+        res.render('login', {});
+    }
 });
 
 router.post('/', function (req, res, next) {
