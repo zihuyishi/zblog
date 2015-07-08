@@ -2,10 +2,8 @@
  * Created by lichong on 15/7/7.
  */
 var mongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
 var config = require('../base/config');
 var assert = require('assert');
-var userInfo = require('../base/userInfo');
 
 var url = config.db_url;
 
