@@ -35,6 +35,12 @@ function _findAndUpdate(db, table, callback) {
         }
     );
 }
+
+/**
+ * 数据库计数器
+ * @param table 请求的collection名
+ * @param callback  function (err, seq: number)
+ */
 var counter = function (table, callback) {
     mongoClient.connect(url, function (err, db) {
         if (err == null) {

@@ -19,4 +19,20 @@ router.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
+router.get('/newsubject', function (req, res, next) {
+    if (req.user != null) {
+        res.render('newsubject', {title:"new article"});
+    } else {
+        res.redirect('/login');
+    }
+});
+
+router.post('/newsubject', function (req, res, next) {
+    if (req.user != null) {
+        res.send(req.body.mytextarea);
+    } else {
+        res.redirect('/login');
+    }
+});
+
 module.exports = router;

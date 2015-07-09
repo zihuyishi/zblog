@@ -1,0 +1,24 @@
+//
+   Created by lichong on 15/7/9.
+
+extends layout
+
+block content
+   script(src='/javascript/tinymce/tinymce.min.js')
+   script
+      |tinymce.init({
+      |     selector: "#mytextarea",
+      |     plugins: [
+      |        "link image preview",
+      |     ],
+      |     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+      |});
+   header
+      h1=title
+
+   form(method="post" action="newsubject")
+      label(for="title")="title: "
+      input(type="text" id="title" name="title" style="width:300px")
+      br
+      textarea(id="mytextarea" name="mytextarea")
+      input(type="submit" class="submitButton" value="提交")
