@@ -4,6 +4,7 @@
 var mongoClient = require('mongodb').MongoClient;
 var config = require('../base/config');
 var assert = require('assert');
+var db_counter = require('./db_counter');
 
 var url = config.db_url;
 
@@ -116,6 +117,25 @@ DBClient.prototype.queryUserExist = function (user, callback) {
         if (callback) {
             callback(result);
         }
+    });
+};
+
+DBClient.prototype.insertSubject = function (subject, callback) {
+    assert(this.database != null);
+    var self = this;
+    db_counter('subjects', function (err, seq) {
+       if (err == null) {
+           subject.setId(seq);
+           self.insert('subjects', subject.getJsonObj(), function (err, result) {
+               if (err == null) {
+                   callback(err, subject);
+               } else {
+                   callback(err);
+               }
+           });
+       } else {
+           callback(err);
+       }
     });
 };
 

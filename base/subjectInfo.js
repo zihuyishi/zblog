@@ -2,42 +2,53 @@
  * Created by saye on 2015/7/6.
  */
 
-var subjectInfo = function() {
-    var that = this,
-        info = {},
-        m_link = null,
-        m_title = null;
-
-    /**
-     * get link of subject
-     * @returns {link string}
-     */
-    info.getLink = function () {
-        return m_link;
-    };
-    /**
-     * set link
-     * @param link string type
-     */
-    info.setLink = function (link) {
-        m_link = link;
-    };
-    /**
-     * get title of subject
-     * @returns {title string}
-     */
-    info.getTitle = function () {
-        return m_title;
-    };
-    /**
-     * set title
-     * @param title string type
-     */
-    info.setTitle = function (title) {
-        m_title = title;
-    };
-
-    return info;
+var subjectInfo = function(title, content, userId) {
+    this.m_title = title;
+    this.m_content = content;
+    this.m_userId = userId;
+    this.m_id = -1;
 };
 
-exports.subjectInfo = subjectInfo;
+subjectInfo.prototype.getTitle = function () {
+    return this.m_title;
+};
+subjectInfo.prototype.setTitle = function (title) {
+    this.m_title = title;
+};
+subjectInfo.prototype.getContent = function () {
+    return this.m_content;
+};
+subjectInfo.prototype.setContent = function (content) {
+    this.m_content = content;
+};
+subjectInfo.prototype.setUserId = function (userId) {
+    this.m_userId = userId;
+};
+subjectInfo.prototype.getUserId = function () {
+    return this.m_userId;
+};
+subjectInfo.prototype.setId = function (id) {
+    this.m_id = id;
+};
+subjectInfo.prototype.getId = function () {
+    return this.m_id;
+};
+
+subjectInfo.prototype.getJsonObj = function () {
+    var obj = {};
+    obj.content = this.m_content;
+    obj.title = this.m_title;
+    obj.userId = this.m_userId;
+    obj.id = this.m_id;
+    return obj;
+};
+
+subjectInfo.prototype.fromJsonObj = function (obj) {
+    this.m_content = obj.content;
+    this.m_title = obj.title;
+    this.m_userId = obj.userId;
+    this.m_id = obj.id;
+};
+
+
+module.exports = subjectInfo;
