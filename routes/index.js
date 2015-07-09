@@ -29,7 +29,10 @@ router.get('/newsubject', function (req, res, next) {
 
 router.post('/newsubject', function (req, res, next) {
     if (req.user != null) {
-        res.send(req.body.mytextarea);
+        res.render('subject', {
+            title: req.body.title,
+            body: req.body.mytextarea
+        });
     } else {
         res.redirect('/login');
     }

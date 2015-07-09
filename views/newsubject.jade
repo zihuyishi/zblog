@@ -4,13 +4,9 @@
 extends layout
 
 block content
-   //syntax highlighter
-   script(src='/javascript/syntaxhighlighter/scripts/shCore.js')
-   script(src='/javascript/syntaxhighlighter/scripts/shBrushJScript.js')
-   link(href='/javascript/syntaxhighlighter/styles/shCore.css' rel='stylesheet')
-   link(href='/javascript/syntaxhighlighter/styles/shThemeDefault.css' rel='stylesheet')
+
    //tinymce
-   script(src='/javascript/tinymce/tinymce.min.js')
+   script(src='/javascripts/tinymce/tinymce.min.js')
    script
       |tinymce.init({
       |     selector: "#mytextarea",
@@ -19,7 +15,6 @@ block content
       |     ],
       |     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | sh4tinymce | preview"
       |});
-      |SyntaxHighlighter.all();
    header
       h1=title
 

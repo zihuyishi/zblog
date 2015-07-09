@@ -26,7 +26,7 @@ function _findAndUpdate(db, table, callback) {
         {$inc: {seq: 1}},
         {returnOriginal: false},
         function (err, result) {
-            if (err == null) {
+            if (err == null && result.value != null) {
                 db.close();
                 callback(err, result.value.seq);
             } else { //counter not init
