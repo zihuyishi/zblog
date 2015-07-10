@@ -7,6 +7,16 @@ var DB_helper = require('../database/db_helper');
 var SubjectInfo = require('../base/subjectInfo');
 var UserInfo = require('../base/userInfo');
 
+
+function requireLogin(req, res, next) {
+    if (!req.user) {
+        req.session.reset();
+        res.redirect('/login');
+    } else {
+        next();
+    }
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var subjects = ['4', '5', '6'];
@@ -24,6 +34,7 @@ router.get('/logout', function (req, res) {
     res.redirect('/');
 });
 
+/* Get new subject page. */
 router.get('/newsubject', function (req, res, next) {
     if (req.user != null) {
         res.render('newsubject', {title:"new article"});
@@ -32,36 +43,32 @@ router.get('/newsubject', function (req, res, next) {
     }
 });
 
-router.post('/newsubject', function (req, res, next) {
-    if (req.user != null) {
-        db_users.findUserByName(req.user.username, function (err, user) {
-            if (err == null && user != null) {
-                var subject = new SubjectInfo(req.body.title, req.body.mytextarea, user.getUserId());
-                var db = new DB_helper();
-                db.connect(function (err) {
-                    if (err == null) {
-                        db.insertSubject(subject, function (err, subject) {
-                            db.close();
-                            if (err == null) {
-                                res.render('subject', {
-                                    title: subject.getTitle(),
-                                    body: subject.getContent()
-                                });
-                            } else {
-                                next(err);
-                            }
-                        });
-                    } else {
-                        next(err);
-                    }
-                });
-            } else {
-                res.redirect('/login');
-            }
-        });
-    } else {
-        res.redirect('/login');
-    }
+router.post('/newsubject', requireLogin, function (req, res, next) {
+    db_users.findUserByName(req.user.username, function (err, user) {
+        if (err == null && user != null) {
+            var subject = new SubjectInfo(req.body.title, req.body.mytextarea, user.getUserId());
+            var db = new DB_helper();
+            db.connect(function (err) {
+                if (err == null) {
+                    db.insertSubject(subject, function (err, subject) {
+                        db.close();
+                        if (err == null) {
+                            res.render('subject', {
+                                title: subject.getTitle(),
+                                body: subject.getContent()
+                            });
+                        } else {
+                            next(err);
+                        }
+                    });
+                } else {
+                    next(err);
+                }
+            });
+        } else {
+            res.redirect('/login');
+        }
+    });
 });
 
 router.get('/subject/:id', function (req, res, next) {
@@ -126,5 +133,9 @@ router.post('/login', function (req, res, next) {
         }
     });
 });
+router.get('/dashboard', requireLogin, function(req, res) {
+   res.send('this is dashboard');
+});
+
 
 module.exports = router;
