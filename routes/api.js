@@ -20,7 +20,7 @@ router.get('/subjectList', function (req, res, next) {
         if (err == null) {
             db.queryAll('subjects', function (err, cursor) {
                 if (err == null) {
-                    cursor.limit(count).toArray(function (err, items) {
+                    cursor.limit(count).sort({'id': -1}).toArray(function (err, items) {
                        if (err == null) {
                            for (var i = 0; i < items.length; i++) {
                                var subject = new SubjectInfo();
