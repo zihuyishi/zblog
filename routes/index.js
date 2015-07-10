@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var config = require('../base/config');
+var base = require('../base/base');
 var db_users = require('../database/db_users');
 var DB_helper = require('../database/db_helper');
 var SubjectInfo = require('../base/subjectInfo');
+var UserInfo = require('../base/userInfo');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -91,6 +93,38 @@ router.get('/subject/:id', function (req, res, next) {
             next(err);
         }
     })
+});
+router.get('/login', function (req, res, next) {
+    if (req.user != null) {
+        res.redirect('/dashboard');
+    } else {
+        res.render('login', {});
+    }
+});
+
+router.post('/login', function (req, res, next) {
+    var user = new UserInfo;
+    user.setUsername(req.body.username);
+    user.setPassword(base.passwordHash(req.body.password));
+    // query user exists
+    var db = new DB_helper();
+    db.connect(function (err) {
+        if (err == null) {
+            db.queryUserExist(user, function (bResult) {
+                if (bResult) {
+                    req.user = user.getJsonObj();
+                    delete req.user.password;
+                    req.session.user = req.user;
+                    res.redirect('/dashboard');
+                } else {
+                    res.render('login', {"info": "username or password is wrong"});
+                }
+                db.close();
+            });
+        } else {
+           res.render('login', {"info": "sorry, server is busy"});
+        }
+    });
 });
 
 module.exports = router;

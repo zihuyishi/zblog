@@ -10,7 +10,6 @@ var config = require('./base/config');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var dashboard = require('./routes/dashboard');
-var login = require('./routes/login');
 
 var app = express();
 
@@ -46,7 +45,6 @@ app.use(function(req, res, next) {
 // route
 app.use('/', routes);
 app.use('/dashboard', dashboard);
-app.use('/login', login);
 app.use('/users', users);
 app.use('/signup', require('./routes/signup'));
 

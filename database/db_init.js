@@ -13,6 +13,7 @@ var tryConnect = function () {
             console.log("connected correctly to database server");
             db.close();
         } else {
+            console.error("failed connected to database");
             throw err;
         }
     });
