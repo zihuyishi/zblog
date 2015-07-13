@@ -40,6 +40,15 @@ app.use(function(req, res, next) {
     }
     next();
 });
+/**
+ * all redirect will set an originURL
+ */
+app.use(function(req, res, next) {
+    if (req.query.fromURL) {
+        req.fromURL = req.query.fromURL;
+    }
+    next();
+});
 
 // route
 app.use('/', routes);

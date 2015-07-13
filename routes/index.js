@@ -11,7 +11,7 @@ var UserInfo = require('../base/userInfo');
 function requireLogin(req, res, next) {
     if (!req.user) {
         req.session.reset();
-        res.redirect('/login');
+        res.redirect('/login?fromURL='+req.url);
     } else {
         next();
     }
@@ -19,14 +19,30 @@ function requireLogin(req, res, next) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    var subjects = ['4', '5', '6'];
-
-    res.render('index', {
-        title: config.blogName,
-        subtitle: 'this is a simple blog',
-        totalSubjects: subjects.length,
-        allSubjects: subjects
+    var db = new DB_helper();
+    db.connect(function (err) {
+        if (err == null) {
+            db.getLatestSubjects(10, function (err, subjects) {
+                if (err == null) {
+                    for (var i = 0; i < subjects.length; i++) {
+                        subjects[i] = subjects[i].getJsonObj();
+                    }
+                    res.render('index', {
+                        title: config.blogName,
+                        subtitle: 'this is a simple blog',
+                        totalSubjects: subjects.length,
+                        allSubjects: subjects
+                    });
+                } else {
+                    next(err);
+                }
+                db.close();
+            })
+        } else {
+            next(err);
+        }
     });
+
 });
 
 router.get('/logout', function (req, res) {
@@ -35,12 +51,8 @@ router.get('/logout', function (req, res) {
 });
 
 /* Get new subject page. */
-router.get('/newsubject', function (req, res, next) {
-    if (req.user != null) {
+router.get('/newsubject', requireLogin, function (req, res, next) {
         res.render('newsubject', {title:"new article"});
-    } else {
-        res.redirect('/login');
-    }
 });
 
 router.post('/newsubject', requireLogin, function (req, res, next) {
@@ -122,7 +134,11 @@ router.post('/login', function (req, res, next) {
                     req.user = user.getJsonObj();
                     delete req.user.password;
                     req.session.user = req.user;
-                    res.redirect('/dashboard');
+                    if (req.fromURL != null) {
+                        res.redirect(req.fromURL);
+                    } else {
+                        res.redirect('/dashboard');
+                    }
                 } else {
                     res.render('login', {"info": "username or password is wrong"});
                 }

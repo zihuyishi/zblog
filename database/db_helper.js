@@ -5,6 +5,7 @@ var mongoClient = require('mongodb').MongoClient;
 var config = require('../base/config');
 var assert = require('assert');
 var db_counter = require('./db_counter');
+var SubjectInfo = require('../base/subjectInfo');
 
 var url = config.db_url;
 
@@ -136,6 +137,34 @@ DBClient.prototype.insertSubject = function (subject, callback) {
        } else {
            callback(err);
        }
+    });
+};
+
+DBClient.prototype.getLatestSubjects = function (count, callback) {
+    this.queryAll('subjects', function (err, cursor) {
+        if (err == null) {
+            cursor.limit(count).sort({'id': -1}).toArray(function (err, items) {
+               if (err == null) {
+                   var list = [];
+                   for (var i = 0; i < items.length; i++) {
+                       var subject = new SubjectInfo();
+                       subject.fromJsonObj(items[i]);
+                       list.push(subject);
+                   }
+                   if (callback) {
+                       callback(err, list);
+                   }
+               } else {
+                   if (callback) {
+                       callback(err);
+                   }
+               }
+            });
+        } else {
+            if (callback) {
+                callback(err);
+            }
+        }
     });
 };
 
